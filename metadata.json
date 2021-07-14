@@ -3,6 +3,6 @@
   "version": "0.1",
   "module": "plugins.security_scanner_nmap",
   "extract": true,
-  "depends_on": ["base", "project", "theme"],
+  "depends_on": ["shared", "projects", "theme"],
   "init_after": ["theme"]
 }
