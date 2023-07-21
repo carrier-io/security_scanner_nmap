@@ -57,7 +57,7 @@ const NmapIntegration = {
                 response.json().then(
                     errorData => {
                         errorData.forEach(item => {
-                            console.debug('AEM item error', item)
+                            console.debug('Nmap item error', item)
                             this.error = {[item.loc[0]]: item.msg}
                         })
                     }
