@@ -16,42 +16,43 @@
 #   limitations under the License.
 
 """ Module """
-from pathlib import Path
-
-import flask  # pylint: disable=E0401
-import jinja2  # pylint: disable=E0401
 from pylon.core.tools import log  # pylint: disable=E0611,E0401
 from pylon.core.tools import module  # pylint: disable=E0611,E0401
 
-from .components.render_nmap import render_nmap_card
+from .models.integration_pd import IntegrationModel
 
 
 class Module(module.ModuleModel):
     """ Galloper module """
 
-    def __init__(self, settings, root_path, context):
-        self.settings = settings
-        self.root_path = root_path
+    def __init__(self, context, descriptor):
         self.context = context
+        self.descriptor = descriptor
 
     def init(self):
         """ Init module """
         log.info("Initializing module")
-        bp = flask.Blueprint(
-            "nmap", "plugins.security_scanner_nmap.plugin",
-            static_folder=str(Path(__file__).parents[0] / "static"),
-            static_url_path='/nmap/static/'
-        )
-        bp.jinja_loader = jinja2.ChoiceLoader([
-            jinja2.loaders.PackageLoader("plugins.security_scanner_nmap", "templates"),
-        ])
-        # Register in app
-        self.context.app.register_blueprint(bp)
-        # Register template slot callback
-        self.context.slot_manager.register_callback("security_scanners", render_nmap_card)
 
-        from .rpc_worker import get_scanner_parameters
-        self.context.rpc_manager.register_function(get_scanner_parameters, name='nmap')
+        SECTION_NAME = 'scanners'
+
+        self.descriptor.init_blueprint()
+
+        self.context.rpc_manager.call.integrations_register_section(
+            name=SECTION_NAME,
+            integration_description='Manage integrations with scanners',
+            test_planner_description='Specify scanners to use. You may also set scanners in <a '
+                                     'href="{}">Integrations</a> '.format('/-/configuration/integrations/')
+        )
+
+        self.context.rpc_manager.call.integrations_register(
+            name=self.descriptor.name,
+            section=SECTION_NAME,
+            settings_model=IntegrationModel,
+        )
+
+        self.descriptor.init_rpcs()
+
+        self.descriptor.init_slots()
 
     def deinit(self):  # pylint: disable=R0201
         """ De-init module """
