@@ -68,8 +68,8 @@ const NmapIntegration = {
                     </textarea>
                     <div class="invalid-feedback">[[ error.nse_scripts ]]</div>
                 </div>
-                    
-                <div>
+
+                <!--<div>
                     <label class="font-h5 font-semibold mb-0">Save intermediates to</label>
                     <p class="font-h6 font-weight-400 mb-2">Optional</p>
                     <input type="text" class="mb-3 form-control form-control-alternative"
@@ -77,7 +77,7 @@ const NmapIntegration = {
                         v-model="save_intermediates_to"
                         :class="{ 'is-invalid': error.save_intermediates_to }">
                     <div class="invalid-feedback">[[ error.save_intermediates_to ]]</div>
-                </div>
+                </div>-->
             </div>
         </template>
         <template #footer>
@@ -116,7 +116,7 @@ const NmapIntegration = {
                 include_unfiltered,
                 nmap_parameters,
                 nse_scripts,
-                save_intermediates_to,
+                // save_intermediates_to,
 
                 status,
             } = this
@@ -130,7 +130,7 @@ const NmapIntegration = {
                 include_unfiltered,
                 nmap_parameters,
                 nse_scripts,
-                save_intermediates_to,
+                // save_intermediates_to,
 
                 status,
             }
@@ -258,12 +258,12 @@ const NmapIntegration = {
             error: {},
             id: null,
 
-            include_ports: '0-65535',
-            exclude_ports: '1,4-40,4444',
+            include_ports: '',
+            exclude_ports: '',
             include_unfiltered: false,
-            nmap_parameters: '-v -sVA',
-            nse_scripts: 'ssl-date,http-mobileversion-checker',
-            save_intermediates_to: '/data/intermediates/dast',
+            nmap_parameters: '',
+            nse_scripts: '',
+            // save_intermediates_to: '/data/intermediates/dast',
 
             pluginName: 'security_scanner_nmap',
             api_url: V.build_api_url('integrations', 'integration') + '/',

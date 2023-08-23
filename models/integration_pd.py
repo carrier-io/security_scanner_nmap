@@ -6,12 +6,12 @@ from pylon.core.tools import log
 
 
 class IntegrationModel(BaseModel):
-    include_ports: Optional[str] = '0-65535'
-    exclude_ports: Optional[str] = '1,4-40,4444'
+    include_ports: Optional[str] = ''
+    exclude_ports: Optional[str] = ''
     include_unfiltered: Optional[bool] = False
-    nmap_parameters: Optional[str] = '-v -sVA'
-    nse_scripts: Optional[str] = 'ssl-date,http-mobileversion-checker'
-    save_intermediates_to: Optional[str] = '/data/intermediates/dast'
+    nmap_parameters: Optional[str] = ''
+    nse_scripts: Optional[str] = ''
+    # save_intermediates_to: Optional[str] = '/data/intermediates/dast'
 
     def check_connection(self) -> bool:
         try:
@@ -22,6 +22,8 @@ class IntegrationModel(BaseModel):
 
     @validator('include_ports', 'exclude_ports')
     def validate_ports(cls, value):
+        if value.strip() == "":
+            return value.strip()
         # Validate if the ports value is in the correct format
         # The correct format can be either "start-end", "port", or a comma-separated list of "port" or "start-end"
         if not re.match(r'^(\d+-\d+|\d+)(,(\d+-\d+|\d+))*$', value):
